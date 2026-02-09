@@ -1,8 +1,5 @@
-Options +FollowSymlinks
-
 RewriteEngine On
 
-RewriteRule ^([A-Za-z]+)/?$ api.php?controller=$1 [L,QSA]
-RewriteRule ^([-0-9]+)/([-0-9]+)/([-0-9]+)/?$ index.php?centerX=$1&centerY=$2&pixelSize=$3 [L,QSA]
-RewriteRule ^([-0-9]+)/([-0-9]+)/?$ index.php?centerX=$1&centerY=$2 [L,QSA]
-RewriteRule ^([-0-9]+)/?$ index.php?centerX=$1 [L,QSA]
+RewriteRule ^([-0-9]+)/([-0-9]+)/([-0-9]+)/?$ index.html [L]
+RewriteRule ^([-0-9]+)/([-0-9]+)/?$ index.html [L]
+RewriteRule ^([-0-9]+)/?$ index.html [L]

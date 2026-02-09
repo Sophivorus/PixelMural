@@ -219,7 +219,7 @@ mural = {
 			'pixelSize': mural.pixelSize,
 			'format': 'base64'
 		};
-		mural.jqXHR = $.get( 'Areas', data, function ( response ) {
+		mural.jqXHR = $.get( 'https://api.pixelmural.org/Areas', data, function ( response ) {
 			//console.log( response );
 			var image = new Image();
 			image.src = 'data:image/png;base64,' + response;
@@ -379,7 +379,7 @@ touch = {
 			if ( color ) {
 				showPixelAuthor(); // Show dummy while getting the data
 				var data = { 'x': touch.currentX, 'y': touch.currentY };
-				$.get( 'Pixels', data, function ( response ) {
+				$.get( 'https://api.pixelmural.org/Pixels', data, function ( response ) {
 					if ( response ) {
 						showPixelAuthor( response.Pixel, response.Author );
 					}

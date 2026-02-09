@@ -86,12 +86,9 @@ button::-moz-focus-inner {
 	display: inline-block;
 }
 
-#facebook-menu {
+#user-menu {
 	float: right;
 	margin: 5px;
-}
-#facebook-logout-button {
-	display: none;
 }
 
 #profile-picture {

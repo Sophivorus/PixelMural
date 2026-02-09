@@ -255,7 +255,7 @@ move = {
 			if ( color ) {
 				showPixelAuthor(); // Show dummy while getting the data
 				var data = { 'x': mouse.currentX, 'y': mouse.currentY };
-				$.get( 'Pixels', data, function ( response ) {
+				$.get( 'https://api.pixelmural.org/Pixels', data, function ( response ) {
 					if ( response ) {
 						showPixelAuthor( response.Pixel, response.Author );
 					}
@@ -505,7 +505,7 @@ preview = {
 			'pixelSize': 1,
 			'format': 'base64'
 		};
-		$.get( 'Areas', data, function ( response ) {
+		$.get( 'https://api.pixelmural.org/Areas', data, function ( response ) {
 			//console.log( response );
 			var image = new Image();
 			image.src = 'data:image/png;base64,' + response;
@@ -603,7 +603,7 @@ function Area( data ) {
 				'area': this.data
 			};
 		//console.log( data );
-		$.post( 'Areas', data, function ( response ) {
+		$.post( 'https://api.pixelmural.org/Areas', data, function ( response ) {
 			//console.log( response );
 			if ( response.newAreaData.length ) {
 				if ( undoable ) {
