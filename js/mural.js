@@ -14,7 +14,9 @@ const mural = {
 	xPixels: null,
 	yPixels: null,
 
-	init() {
+	session: null,
+
+	async init() {
 
 		// Get and set the variables that must wait for the DOM to be loaded
 		const canvas = document.getElementById( 'mural' );
@@ -35,6 +37,14 @@ const mural = {
 		// Initialise dependencies
 		mouse.init();
 		touch.init();
+
+		try {
+			const response = await fetch( 'https://api.pixelmural.org/Users' );
+			const data = await response.json();
+			console.log( data );
+		} catch ( error ) {
+			// @todo
+		}
 	},
 
 	// GETTERS

@@ -1,20 +1,19 @@
-tools = {
+const tools = {
 
 	color: '#000000',
 
 	stroke: 1,
 
-	// EVENT HANDLERS
+	init() {
 
-	init: function () {
 		// Initialize Spectrum
-		$( '.color-input' ).spectrum({
+		$( '.color-input' ).spectrum( {
 			preferredFormat: 'hex',
 			showButtons: false,
 			show: tools.clickColorButton,
 			change: tools.clickColorButton,
 			hide: tools.clickColorButton
-		});
+		} );
 
 		// Set the variables that must wait for the DOM to be loaded
 		grid.setCanvas( document.getElementById( 'grid' ) );
@@ -112,7 +111,7 @@ tools = {
 		}
 		tools.arrayPointer--;
 		var oldAreaData = tools.oldData[ tools.arrayPointer ],
-			oldArea = new window.Area( oldAreaData );
+			oldArea = new Area( oldAreaData );
 		oldArea.paint().save();
 		tools.update();
 	},
@@ -123,7 +122,7 @@ tools = {
 			return; // There's nothing else to redo
 		}
 		var newAreaData = tools.newData[ tools.arrayPointer ],
-			newArea = new window.Area( newAreaData );
+			newArea = new Area( newAreaData );
 		tools.arrayPointer++;
 		newArea.paint().save();
 		tools.update();
@@ -293,7 +292,7 @@ paintPixel = function ( event ) {
 		newAreaData.push({ 'x': x + 1, 'y': y - 1, 'color': color });
 	}
 
-	var newArea = new window.Area( newAreaData );
+	var newArea = new Area( newAreaData );
 	newArea.paint().save( true );
 };
 
@@ -317,7 +316,7 @@ erasePixel = function ( event ) {
 		newAreaData.push({ 'x': x + 1, 'y': y - 1, 'color': null });
 	}
 
-	var newArea = new window.Area( newAreaData );
+	var newArea = new Area( newAreaData );
 	newArea.erase().save( true );
 };
 
@@ -366,7 +365,7 @@ paintArea = function ( event ) {
 		}
 	}
 
-	var newArea = new window.Area( newAreaData );
+	var newArea = new Area( newAreaData );
 	newArea.save( true );
 };
 
@@ -573,39 +572,38 @@ function Pixel( data ) {
 /**
  * Area model
  */
-function Area( data ) {
+class Area {
 
-	this.data = data;
+	constructor( data ) {
+		this.data = data;
+	}
 
-	this.paint = function () {
-		var pixel;
-		this.data.forEach( function ( data ) {
-			pixel = new window.Pixel( data );
+	paint() {
+		for ( const data of this.data ) {
+			const pixel = new window.Pixel( data );
 			pixel.paint();
-		});
+		}
 		return this;
-	};
+	}
 
-	this.erase = function () {
-		var pixel;
-		this.data.forEach( function ( data ) {
-			pixel = new window.Pixel( data );
+	erase() {
+		for ( const data of this.data ) {
+			const pixel = new window.Pixel( data );
 			pixel.erase();
-		});
+		}
 		return this;
-	};
+	}
 
-	this.save = function ( undoable ) {
-		var timeout = setTimeout( showLoading, 1000 );
-			data = {
-				tool: tools.activeTool,
-				stroke: tools.stroke,
-				area: this.data,
-				session: getCookie( 'PHPSESSID' )
-			};
-		//console.log( data );
-		$.post( 'https://api.pixelmural.org/Areas', data, function ( response ) {
-			console.log( response );
+	async save( undoable ) {
+		const timeout = setTimeout( showLoading, 1000 );
+		const formData = new FormData();
+		formData.append( 'tool', tools.activeTool );
+		formData.append( 'stroke', tools.stroke );
+		formData.append( 'area', JSON.stringify( this.data ) );
+		try {
+			const response = await fetch( 'https://api.pixelmural.org/Areas', { method: 'POST', body: formData } );
+			const data = await response.json();
+			console.log( data );
 			if ( response.newAreaData.length ) {
 				if ( undoable ) {
 					tools.oldData.splice( tools.arrayPointer, tools.oldData.length - tools.arrayPointer, response.oldAreaData );
@@ -613,14 +611,16 @@ function Area( data ) {
 					tools.arrayPointer++;
 					tools.update();
 				}
-				var newArea = new window.Area( response.newAreaData );
+				const newArea = new Area( response.newAreaData );
 				newArea.paint();
 			}
 			clearTimeout( timeout );
 			hideLoading();
-		}).fail( console.log );
+		} catch ( error ) {
+			// @todo
+		}
 		return this;
-	};
+	}
 }
 
-$( tools.init );
+window.onload = () => tools.init();
