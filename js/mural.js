@@ -9,7 +9,7 @@ mural = {
 	centerX: 0,
 	centerY: 0,
 
-	pixelSize: 2,
+	pixelSize: 1,
 
 	xPixels: null,
 	yPixels: null,
