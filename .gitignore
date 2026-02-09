@@ -1,3 +1,4 @@
-.DS_Store
-vendor/
-includes/config.php
+# DreamHost stuff
+.dh-diag
+favicon.gif
+favicon.ico
