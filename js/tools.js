@@ -598,13 +598,14 @@ function Area( data ) {
 	this.save = function ( undoable ) {
 		var timeout = setTimeout( showLoading, 1000 );
 			data = {
-				'tool': tools.activeTool,
-				'stroke': tools.stroke,
-				'area': this.data
+				tool: tools.activeTool,
+				stroke: tools.stroke,
+				area: this.data,
+				session: getCookie( 'PHPSESSID' )
 			};
 		//console.log( data );
 		$.post( 'https://api.pixelmural.org/Areas', data, function ( response ) {
-			//console.log( response );
+			console.log( response );
 			if ( response.newAreaData.length ) {
 				if ( undoable ) {
 					tools.oldData.splice( tools.arrayPointer, tools.oldData.length - tools.arrayPointer, response.oldAreaData );
@@ -617,7 +618,7 @@ function Area( data ) {
 			}
 			clearTimeout( timeout );
 			hideLoading();
-		});
+		}).fail( console.log );
 		return this;
 	};
 }
