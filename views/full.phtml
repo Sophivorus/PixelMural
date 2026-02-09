@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title><?php echo TITLE; ?></title>
+	<base href="<?php echo BASE; ?>">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/spectrum/1.7.1/spectrum.min.css">
+	<link rel="stylesheet" href="css/pixelmural.css">
+	<link rel="icon" href="images/favicon.ico">
+	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="//connect.facebook.net/en_US/sdk.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/spectrum/1.7.1/spectrum.min.js"></script>
+	<script>
+		var FACEBOOK_APP_ID = <?php echo FACEBOOK_APP_ID; ?>,
+			FACEBOOK_API_VERSION = '<?php echo FACEBOOK_API_VERSION; ?>';
+	</script>
+	<script src="js/functions.js"></script>
+	<script src="js/facebook.js"></script>
+	<script src="js/mural.js"></script>
+	<script src="js/jquery.hotkeys.js"></script>
+	<script src="js/tools.js"></script>
+	<script src="js/ga.js"></script>
+	<meta charset="UTF-8">
+	<meta name="description" content="<?php echo DESCRIPTION; ?>">
+	<meta property="og:url" content="<?php echo $ogUrl; ?>">
+	<meta property="og:title" content="<?php echo TITLE; ?>">
+	<meta property="og:description" content="<?php echo DESCRIPTION; ?>">
+	<meta property="og:image" content="<?php echo $ogImage; ?>">
+	<meta property="og:image:type" content="image/png">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="630">
+</head>
+<body>
+	<div id="fb-root"></div>
+
+	<div id="header">
+
+		<a href="<?php echo BASE; ?>" title="Home"><img src="images/logo.png" alt="Home"></a>
+
+		<div id="tools-menu" class="menu">
+			<button id="move-button" title="Move [Spacebar]"><img src="images/move.png" alt="Move"></button>
+			<button id="zoom-in-button" title="Zoom in [I]" accesskey="i"><img src="images/zoom-in.png" alt="Zoom in"></button>
+			<button id="zoom-out-button" title="Zoom out [O]" accesskey="o"><img src="images/zoom-out.png" alt="Zoom out"></button>
+			<button id="pencil-button" title="Pencil [P]" accesskey="p"><img src="images/pencil.png" alt="Pencil"></button>
+			<button id="eraser-button" title="Eraser [E]" accesskey="e"><img src="images/eraser.png" alt="Eraser"></button>
+			<button id="dropper-button" title="Dropper [Alt]" accesskey="d"><img src="images/dropper.png" alt="Dropper"></button>
+			<button id="bucket-button" title="Bucket [B]" accesskey="b"><img src="images/bucket.png" alt="Bucket"></button>
+			<input id="color-input-1" title="Stroke 1" class="color-input" value="#000000" data-stroke="1">
+			<input id="color-input-2" title="Stroke 2" class="color-input" value="#000000" data-stroke="2">
+			<input id="color-input-3" title="Stroke 3" class="color-input" value="#000000" data-stroke="3">
+			<button id="grid-button" title="Grid [G]" accesskey="g"><img src="images/grid.png" alt="Grid"></button>
+			<button id="preview-button" title="Preview [R]" accesskey="r"><img src="images/preview.png" alt="Preview"></button>
+			<button id="undo-button" title="Undo [Z]" accesskey="z"><img src="images/undo.png" alt="Undo"></button>
+			<button id="redo-button" title="Redo [X]" accesskey="x"><img src="images/redo.png" alt="Redo"></button>
+		</div>
+
+		<div id="facebook-menu" class="menu">
+			<button id="facebook-share-button" title="Share on Facebook"><img src="images/facebook-share.png" alt="Share"></button>
+			<button id="facebook-login-button" title="Log in with Facebook"><img src="images/facebook-login.png" alt="Login"></button>
+			<button id="facebook-logout-button" title="Log out from Facebook"><img src="images/facebook-logout.png" alt="Logout"></button>
+			<img id="profile-picture" src="images/anon.png" alt="Your profile picture">
+		</div>
+
+	</div>
+
+	<canvas id="mural"></canvas>
+	<canvas id="grid"></canvas>
+	<canvas id="preview"></canvas>
+
+	<img id="loading" src="images/loading.gif" title="Loading..." alt="Loading...">
+
+</body>
+</html>

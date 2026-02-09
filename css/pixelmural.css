@@ -1,0 +1,192 @@
+html {
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	height: 100%;
+}
+
+body {
+	box-sizing: border-box;
+	cursor: default;
+	font-family: Helvetica;
+	font-size: 14px;
+	font-weight: 300;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+	height: 100%;
+	user-select: none;
+	-o-user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none; 
+	-webkit-user-select: none;
+}
+
+button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+#header {
+	background: white;
+	box-sizing: border-box;
+	padding: 5px;
+	position: absolute;
+	width: 100%;
+	z-index: 3;
+}
+#header a {
+	display: inline-block;
+	padding: 5px;
+	vertical-align: middle;
+}
+#header a img {
+	display: block;
+	max-height: 30px;
+}
+#header button {
+	background: transparent;
+	border: none;
+	box-sizing: border-box;
+	cursor: pointer;
+	font: inherit;
+	margin: 0;
+	outline: none;
+	padding: 5px;
+	position: relative;
+	vertical-align: middle;
+}
+#header button img {
+	display: block;
+	max-height: 30px;
+}
+#header button.disabled {
+	cursor: default;
+}
+#header button.disabled img {
+	opacity: .1;
+}
+#header button.active {
+	background: #aaf;
+}
+#header .hidden {
+	display: none;
+}
+
+#loading {
+	max-height: 30px;
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+	z-index: 2;
+}
+
+#tools-menu {
+	display: inline-block;
+}
+
+#facebook-menu {
+	float: right;
+	margin: 5px;
+}
+#facebook-logout-button {
+	display: none;
+}
+
+#profile-picture {
+	margin: 0 5px;
+	max-height: 30px;
+	vertical-align: middle;
+}
+
+#mural {
+	background: #ddd;
+}
+
+#grid {
+	display: none;
+	pointer-events: none;
+	position: absolute;
+	top: 0; left: 0;
+	z-index: 1;
+}
+
+#preview {
+	background: #ddd;
+	border: 1px solid black;
+	display: none;
+	pointer-events: none;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 2;
+}
+
+#author {
+	background: lightyellow;
+	border-radius: 10px;
+	margin: 10px;
+	padding: 10px 70px 10px 10px; /* The 70px compensate for the floating image */
+	position: absolute;
+	left: 0; bottom: 0;
+    user-select: none;
+	white-space: nowrap;
+    z-index: 2;
+}
+#author img {
+	display: block;
+	float: left;
+	margin-right: 10px;
+	width: 50px; height: 50px;
+}
+#author a {
+	white-space: nowrap;
+}
+
+/* Spectrum overrides */
+.sp-replacer {
+	background: none;
+	border: none;
+	margin: 5px 10px;
+	overflow: visible;
+	padding: 0;
+	position: relative;
+}
+.sp-preview {
+	border: 1px solid black;
+	margin: 0;
+}
+.sp-container,
+.sp-color,
+.sp-hue {
+	border: 1px solid black;
+}
+.sp-active {
+	outline: 5px solid #aaf;
+}
+.sp-dd {
+	display: none;
+}
+.sp-top {
+	display: block;
+	margin: 0;
+}
+.sp-picker-container {
+	background: white;
+	border: none;
+	margin: 0;
+	padding: 10px;
+}
+#color-input-1 + .sp-replacer .sp-preview {
+	width: 9px;
+	height: 9px;
+}
+#color-input-2 + .sp-replacer .sp-preview {
+	width: 19px;
+	height: 19px;
+}
+#color-input-3 + .sp-replacer .sp-preview {
+	width: 29px;
+	height: 29px;
+}
