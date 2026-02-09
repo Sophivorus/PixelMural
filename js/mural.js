@@ -1,4 +1,4 @@
-mural = {
+const mural = {
 
 	canvas: null,
 	context: null,
@@ -14,230 +14,236 @@ mural = {
 	xPixels: null,
 	yPixels: null,
 
-	// INITIALISER
+	init() {
 
-	init: function () {
 		// Get and set the variables that must wait for the DOM to be loaded
-		var canvas = document.getElementById( 'mural' ),
-			centerX = mural.getCenterX(),
-			centerY = mural.getCenterY(),
-			pixelSize = mural.getPixelSize();
-		mural.setCanvas( canvas );
-		mural.setCenterX( centerX );
-		mural.setCenterY( centerY );
-		mural.setPixelSize( pixelSize );
+		const canvas = document.getElementById( 'mural' );
+		const centerX = this.getCenterX();
+		const centerY = this.getCenterY();
+		const pixelSize = this.getPixelSize();
+		this.setCanvas( canvas );
+		this.setCenterX( centerX );
+		this.setCenterY( centerY );
+		this.setPixelSize( pixelSize );
 
 		// Fill the mural
-		mural.resize();
+		this.resize();
 
 		// Bind events
-		$( window ).resize( mural.resize );
+		window.onresize = event => this.resize( event );
 
 		// Initialise dependencies
 		mouse.init();
 		touch.init();
-
-		// Create a dummy user
-		user = new User;
 	},
 
 	// GETTERS
 
-	getXpixels: function () {
-		return Math.floor( mural.width / mural.pixelSize );
+	getXpixels() {
+		return Math.floor( this.width / this.pixelSize );
 	},
 
-	getYpixels: function () {
-		return Math.floor( mural.height / mural.pixelSize );
+	getYpixels() {
+		return Math.floor( this.height / this.pixelSize );
 	},
 
-	getCenterX: function() {
-		var centerX = parseInt( window.location.pathname.split( '/' ).slice( -3, -2 ) );
+	getCenterX() {
+		const centerX = parseInt( window.location.pathname.split( '/' ).slice( -3, -2 ), 10 );
 		if ( !isNaN( centerX ) ) {
 			return centerX;
 		}
-		return mural.centerX;
+		return this.centerX;
 	},
 
-	getCenterY: function() {
-		var centerY = parseInt( window.location.pathname.split( '/' ).slice( -2, -1 ) );
+	getCenterY() {
+		const centerY = parseInt( window.location.pathname.split( '/' ).slice( -2, -1 ), 10 );
 		if ( !isNaN( centerY ) ) {
 			return centerY;
 		}
-		return mural.centerY;
+		return this.centerY;
 	},
 
-	getPixelSize: function() {
-		var pixelSize = parseInt( window.location.pathname.split( '/' ).slice( -1 ) );
+	getPixelSize() {
+		const pixelSize = parseInt( window.location.pathname.split( '/' ).slice( -1 ), 10 );
 		if ( !isNaN( pixelSize ) ) {
 			return pixelSize;
 		}
-		return mural.pixelSize;
+		return this.pixelSize;
 	},
 
 	/**
 	 * Returns the color of a visible pixel
 	 */
-	getPixelColor: function ( x, y ) {
-		var rectX = Math.abs( mural.centerX - Math.floor( mural.xPixels / 2 ) - x ) * mural.pixelSize,
-			rectY = Math.abs( mural.centerY - Math.floor( mural.yPixels / 2 ) - y ) * mural.pixelSize,
-			imageData = mural.context.getImageData( rectX, rectY, 1, 1 ),
-			red   = imageData.data[0],
-			green = imageData.data[1],
-			blue  = imageData.data[2],
-			alpha = imageData.data[3],
-			color = alpha ? rgb2hex( red, green, blue ) : null;
+	getPixelColor( x, y ) {
+		const rectX = Math.abs( this.centerX - Math.floor( this.xPixels / 2 ) - x ) * this.pixelSize;
+		const rectY = Math.abs( this.centerY - Math.floor( this.yPixels / 2 ) - y ) * this.pixelSize;
+		const imageData = this.context.getImageData( rectX, rectY, 1, 1 );
+		const red   = imageData.data[0];
+		const green = imageData.data[1];
+		const blue  = imageData.data[2];
+		const alpha = imageData.data[3];
+		const color = alpha ? rgb2hex( red, green, blue ) : null;
 		return color;
 	},
 
 	// SETTERS
 
-	setCanvas: function ( canvas ) {
-		mural.canvas = canvas;
-		mural.context = canvas.getContext( '2d' );
+	setCanvas( canvas ) {
+		this.canvas = canvas;
+		this.context = canvas.getContext( '2d' );
 	},
 
-	setWidth: function ( value ) {
-		if ( mural.width === value ) {
+	setWidth( value ) {
+		if ( this.width === value ) {
 			return;
 		}
-		mural.width = value;
-		mural.canvas.setAttribute( 'width', value );
-		mural.xPixels = mural.getXpixels();
+		this.width = value;
+		this.canvas.width = value;
+		this.xPixels = this.getXpixels();
 	},
 
-	setHeight: function ( value ) {
-		if ( mural.height === value ) {
+	setHeight( value ) {
+		if ( this.height === value ) {
 			return;
 		}
-		mural.height = value;
-		mural.canvas.setAttribute( 'height', value );
-		mural.yPixels = mural.getYpixels();
+		this.height = value;
+		this.canvas.height = value;
+		this.yPixels = this.getYpixels();
 	},
 
-	setCenterX: function ( value ) {
-		mural.centerX = value;
-		mural.updateURL();
+	setCenterX( value ) {
+		this.centerX = value;
+		this.updateURL();
 	},
 
-	setCenterY: function ( value ) {
-		mural.centerY = value;
-		mural.updateURL();
+	setCenterY( value ) {
+		this.centerY = value;
+		this.updateURL();
 	},
 
-	setPixelSize: function ( value ) {
-		mural.pixelSize = parseInt( value );
-		if ( mural.pixelSize > 64 ) {
-			mural.pixelSize = 64; // Max pixel size
+	setPixelSize( value ) {
+		this.pixelSize = parseInt( value, 10 );
+		if ( this.pixelSize > 64 ) {
+			this.pixelSize = 64; // Max pixel size
 		}
-		if ( mural.pixelSize < 1 ) {
-			mural.pixelSize = 1; // Min pixel size
+		if ( this.pixelSize < 1 ) {
+			this.pixelSize = 1; // Min pixel size
 		}
-		mural.xPixels = mural.getXpixels();
-		mural.yPixels = mural.getYpixels();
-		mural.updateURL();
+		this.xPixels = this.getXpixels();
+		this.yPixels = this.getYpixels();
+		this.updateURL();
 	},
 
 	// ACTIONS
 
-	zoom: function ( scale ) {
-		mural.setPixelSize( mural.pixelSize * scale );
+	zoom( scale ) {
+		this.setPixelSize( this.pixelSize * scale );
 		// First zoom in locally
-		var image = new Image();
-		image.src = mural.canvas.toDataURL( 'image/png' );
-		image.onload = function () {
-			mural.clear();
-			mural.context.save();
-			mural.context.imageSmoothingEnabled = false; // Else the pixels will blur
-			mural.context.setTransform( scale, 0, 0, scale, mural.canvas.width / 2, mural.canvas.height / 2 );
-			mural.context.drawImage( image, -image.width / 2, -image.height / 2 - 1 ); // The -1 corrects a minor displacement
-			mural.context.restore();
-			mural.update(); // Get the new data
-		}
+		const image = new Image;
+		image.src = this.canvas.toDataURL( 'image/png' );
+		image.onload = () => {
+			this.clear();
+			this.context.save();
+			this.context.imageSmoothingEnabled = false; // Else the pixels will blur
+			this.context.setTransform( scale, 0, 0, scale, this.canvas.width / 2, this.canvas.height / 2 );
+			this.context.drawImage( image, -image.width / 2, -image.height / 2 - 1 ); // The -1 corrects a minor displacement
+			this.context.restore();
+			this.update(); // Get the new data
+		};
 	},
-	zoomIn: function () {
-		if ( mural.pixelSize >= 64 ) {
+	zoomIn() {
+		if ( this.pixelSize >= 64 ) {
 			return;
 		}
-		mural.zoom( 2 );
+		this.zoom( 2 );
 	},
-	zoomOut: function () {
-		if ( mural.pixelSize <= 1 ) {
+	zoomOut() {
+		if ( this.pixelSize <= 1 ) {
 			return;
 		}
-		mural.zoom( 0.5 );
+		this.zoom( 0.5 );
 	},
 
-	move: function ( diffX, diffY ) {
-		mural.setCenterX( mural.centerX - diffX );
-		mural.setCenterY( mural.centerY - diffY );
-		var imageData = mural.context.getImageData( 0, 0, mural.width, mural.height );
-		mural.clear();
-		mural.context.putImageData( imageData, diffX * mural.pixelSize, diffY * mural.pixelSize );
+	move( diffX, diffY ) {
+		this.setCenterX( this.centerX - diffX );
+		this.setCenterY( this.centerY - diffY );
+		const imageData = this.context.getImageData( 0, 0, this.width, this.height );
+		this.clear();
+		this.context.putImageData( imageData, diffX * this.pixelSize, diffY * this.pixelSize );
 	},
-	moveLeft: function () {
-		mural.move( -1, 0 );
+	moveLeft() {
+		this.move( -1, 0 );
 	},
-	moveUp: function () {
-		mural.move( 0, -1 );
+	moveUp() {
+		this.move( 0, -1 );
 	},
-	moveRight: function () {
-		mural.move( 1, 0 );
+	moveRight() {
+		this.move( 1, 0 );
 	},
-	moveDown: function () {
-		mural.move( 0, 1 );
+	moveDown() {
+		this.move( 0, 1 );
 	},
 
 	timeout: null,
-	resize: function () {
-		clearTimeout( mural.timeout );
-		mural.timeout = setTimeout( function () {
-			var width = $( 'body' ).width(),
-				height = $( 'body' ).height();
-			mural.setWidth( width );
-			mural.setHeight( height );
-			mural.update();
+	resize() {
+		clearTimeout( this.timeout );
+		this.timeout = setTimeout( () => {
+			const width = document.body.clientWidth;
+			const height = document.body.clientHeight;
+			this.setWidth( width );
+			this.setHeight( height );
+			this.update();
 		}, 200 );
 	},
 
-	clear: function () {
-		mural.context.clearRect( 0, 0, mural.width, mural.height );
+	clear() {
+		this.context.clearRect( 0, 0, this.width, this.height );
 	},
 
-	jqXHR: null, // This will hold the jQuery XMLHTTPRequest object created for every AJAX call
-	update: function () {
-		if ( mural.jqXHR ) {
-			mural.jqXHR.abort(); // Abort any unfinished updates
+	abortController: null,
+	async update() {
+		if ( this.abortController ) {
+			 this.abortController.abort(); // Abort any unfinished updates
 		}
+		this.abortController = new AbortController;
+
 		showLoading();
 
-		var data = {
-			'width': mural.width,
-			'height': mural.height,
-			'centerX': mural.centerX,
-			'centerY': mural.centerY,
-			'pixelSize': mural.pixelSize,
-			'format': 'base64'
+		// Prepare the request
+		const data = {
+			width: this.width,
+			height: this.height,
+			centerX: this.centerX,
+			centerY: this.centerY,
+			pixelSize: this.pixelSize,
+			format: 'base64'
 		};
-		mural.jqXHR = $.get( 'https://api.pixelmural.org/Areas', data, function ( response ) {
-			//console.log( response );
-			var image = new Image();
-			image.src = 'data:image/png;base64,' + response;
-			image.onload = function () {
-				mural.clear();
-				mural.context.drawImage( image, 0, 0 );
+		const queryString = new URLSearchParams( data ).toString();
+		const url = 'https://api.pixelmural.org/Areas?' + queryString;
+
+		try {
+			const response = await fetch( url, { signal: this.abortController.signal } );
+			this.abortController = null;
+    		const src = await response.text();
+			const image = new Image;
+			image.src = 'data:image/png;base64,' + src;
+			image.onload = () => {
+				this.clear();
+				this.context.drawImage( image, 0, 0 );
 				hideLoading();
 			};
-		});
+		} catch ( error ) {
+			// @todo
+		}
 	},
 
-	updateURL: function () {
-		var BASE = $( 'base' ).attr( 'href' );
+	updateURL() {
+		const BASE = document.querySelector( 'base' ).href;
 		history.replaceState( null, null, BASE + mural.centerX + '/' + mural.centerY + '/' + mural.pixelSize );
 	}
 };
 
-mouse = {
+const mouse = {
 
 	// The distance from the origin of the coordinate system in virtual pixels (not real ones)
 	currentX: null,
@@ -252,66 +258,68 @@ mouse = {
 	onDrag: null,
 	onUp: null,
 
-	// INITIALISER
-	init: function () {
+	init() {
 		// Bind events
-		$( mural.canvas ).mousedown( mouse.down ).mousemove( mouse.move ).mouseup( mouse.up );
-		//$( mural.canvas ).bind( 'mousewheel DOMMouseScroll', mouse.wheel );
+		const canvas = mural.canvas;
+		canvas.addEventListener( 'mousedown', event => this.down( event ) );
+		canvas.addEventListener( 'mousemove', event => this.move( event ) );
+		canvas.addEventListener( 'mouseup', event => this.up( event ) );
+		//canvas.addEventListener( 'mousewheel DOMMouseScroll', event => this.wheel( event ) );
 	},
 
 	// GETTERS
 
-	getCurrentX: function ( event ) {
-		var offsetX = event.pageX - $( event.target ).offset().left - 1, // The -1 corrects a minor displacement
-			currentX = mural.centerX - Math.floor( mural.xPixels / 2 ) + Math.floor( offsetX / mural.pixelSize );
+	getCurrentX( event ) {
+		const offsetX = event.pageX - event.target.offsetLeft - 1; // The -1 corrects a minor displacement
+		const currentX = mural.centerX - Math.floor( mural.xPixels / 2 ) + Math.floor( offsetX / mural.pixelSize );
 		return currentX;
 	},
 
-	getCurrentY: function ( event ) {
-		var offsetY = event.pageY - $( event.target ).offset().top - 2, // The -2 corrects a minor displacement
-			currentY = mural.centerY - Math.floor( mural.yPixels / 2 ) + Math.floor( offsetY / mural.pixelSize );
+	getCurrentY( event ) {
+		const offsetY = event.pageY - event.target.offsetTop - 2; // The -2 corrects a minor displacement
+		const currentY = mural.centerY - Math.floor( mural.yPixels / 2 ) + Math.floor( offsetY / mural.pixelSize );
 		return currentY;
 	},
 
 	// EVENT HANDLERS
 
-	down: function ( event ) {
-		mouse.state = 'down';
-		if ( mouse.onDown ) {
-			mouse.onDown( event );
+	down( event ) {
+		this.state = 'down';
+		if ( this.onDown ) {
+			this.onDown( event );
 		}
 	},
 
-	move: function ( event ) {
-		mouse.previousX = mouse.currentX;
-		mouse.previousY = mouse.currentY;
+	move( event ) {
+		this.previousX = this.currentX;
+		this.previousY = this.currentY;
 
-		mouse.currentX = mouse.getCurrentX( event );
-		mouse.currentY = mouse.getCurrentY( event );
+		this.currentX = this.getCurrentX( event );
+		this.currentY = this.getCurrentY( event );
 
 		// If the mouse is being dragged
-		if ( mouse.state === 'down' && ( mouse.currentX !== mouse.previousX || mouse.currentY !== mouse.previousY ) && mouse.onDrag ) {
-			mouse.onDrag( event );
+		if ( this.state === 'down' && ( this.currentX !== this.previousX || this.currentY !== this.previousY ) && this.onDrag ) {
+			this.onDrag( event );
 		}
 	},
 
-	up: function ( event ) {
-		mouse.state = 'up';
-		if ( mouse.onUp ) {
-			mouse.onUp( event );
+	up( event ) {
+		this.state = 'up';
+		if ( this.onUp ) {
+			this.onUp( event );
 		}
 	},
 
-	wheel: function ( event ) {
+	wheel( event ) {
 		if ( event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0 ) {
-			mural.zoomIn();
+			this.zoomIn();
 		} else {
-			mural.zoomOut();
+			this.zoomOut();
 		}
 	}
 };
 
-touch = {
+const touch = {
 
 	// The distance from the origin of the coordinate system in virtual pixels (not real ones)
 	currentX: null,
@@ -322,68 +330,77 @@ touch = {
 
 	moved: false,
 
-	// INITIALISER
-	init: function () {
+	init() {
 		// Bind events
-    	$( mural.canvas ).on( 'touchstart', touch.start ).on( 'touchmove', touch.move ).on( 'touchend', touch.end );
+		const canvas = mural.canvas;
+		canvas.addEventListener( 'touchstart', event => this.start( event ) );
+		canvas.addEventListener( 'touchmove', event => this.move( event ) );
+		canvas.addEventListener( 'touchend', event => this.end( event ) );
 	},
 
 	// GETTERS
 
-	getCurrentX: function ( event ) {
-		var pageX = event.originalEvent.changedTouches[0].pageX,
-			offsetX = pageX - $( event.target ).offset().left,
-			currentX = mural.centerX - Math.floor( mural.xPixels / 2 ) + Math.floor( offsetX / mural.pixelSize );
+	getCurrentX( event ) {
+		const pageX = event.changedTouches[0].pageX;
+		const offsetX = pageX - event.target.offsetLeft;
+		const currentX = mural.centerX - Math.floor( mural.xPixels / 2 ) + Math.floor( offsetX / mural.pixelSize );
 		return currentX;
 	},
 
-	getCurrentY: function ( event ) {
-		var pageY = event.originalEvent.changedTouches[0].pageY,
-			offsetY = pageY - $( event.target ).offset().top,
-			currentY = mural.centerY - Math.floor( mural.yPixels / 2 ) + Math.floor( offsetY / mural.pixelSize );
+	getCurrentY( event ) {
+		const pageY = event.changedTouches[0].pageY;
+		const offsetY = pageY - event.target.offsetTop;
+		const currentY = mural.centerY - Math.floor( mural.yPixels / 2 ) + Math.floor( offsetY / mural.pixelSize );
 		return currentY;
 	},
 
 	// EVENT HANDLERS
 
-	start: function ( event ) {
-		touch.currentX = touch.getCurrentX( event );
-		touch.currentY = touch.getCurrentY( event );
+	start( event ) {
+		this.currentX = this.getCurrentX( event );
+		this.currentY = this.getCurrentY( event );
 	},
 
-	move: function ( event ) {
-		touch.previousX = touch.currentX;
-		touch.previousY = touch.currentY;
+	move( event ) {
+		this.previousX = this.currentX;
+		this.previousY = this.currentY;
 
-		touch.currentX = touch.getCurrentX( event );
-		touch.currentY = touch.getCurrentY( event );
+		this.currentX = this.getCurrentX( event );
+		this.currentY = this.getCurrentY( event );
 
-		var diffX = touch.currentX - touch.previousX,
-			diffY = touch.currentY - touch.previousY;
+		const diffX = this.currentX - this.previousX;
+		const diffY = this.currentY - this.previousY;
 
 		mural.move( diffX, diffY );
 
 		// Bugfix: without this, the board flickers while moving, not sure why
-		touch.currentX = touch.getCurrentX( event );
-		touch.currentY = touch.getCurrentY( event );
+		this.currentX = this.getCurrentX( event );
+		this.currentY = this.getCurrentY( event );
 
-		touch.moved = true;
+		this.moved = true;
 	},
 
-	end: function ( event ) {
-		if ( touch.moved ) {
+	async end( event ) {
+		if ( this.moved ) {
 			mural.update();
-			touch.moved = false;
+			this.moved = false;
 		} else {
-			var color = mural.getPixelColor( touch.currentX, touch.currentY );
+			const color = mural.getPixelColor( this.currentX, this.currentY );
 			if ( color ) {
 				showPixelAuthor(); // Show dummy while getting the data
-				var data = { 'x': touch.currentX, 'y': touch.currentY };
-				$.get( 'https://api.pixelmural.org/Pixels', data, function ( response ) {
-					if ( response ) {
-						showPixelAuthor( response.Pixel, response.Author );
+				const data = { x: this.currentX, y: this.currentY };
+				const queryString = new URLSearchParams( data ).toString();
+				const url = 'https://api.pixelmural.org/Pixels?' + queryString;
+				try {
+					const response = await fetch( url );
+					if ( !response.ok ) {
+						// @todo
 					}
-				});
+					const data = await response.json();
+					showPixelAuthor( data.Pixel, data.Author );
+				} catch ( error ) {
+					// @todo
+				}
 			} else {
 				hidePixelAuthor();
 			}
@@ -391,57 +408,4 @@ touch = {
 	}
 };
 
-
-/**
- * User model
- */
-function User( data ) {
-
-	this.id = null;
-	this.facebook_id = null;
-	this.insert_time = null;
-	this.update_time = null;
-	this.name = null;
-	this.email = null;
-	this.gender = null;
-	this.locale = null;
-	this.link = null;
-	this.status = 'anon';
-	this.timezone = null;
-
-	for ( var property in data ) {
-		this[ property ] = data[ property ];
-	}
-
-	this.getData = function () {
-		return {
-			'id': this.id,
-			'facebook_id': this.facebook_id,
-			'insert_time': this.insert_time,
-			'update_time': this.update_time,
-			'name': this.name,
-			'email': this.email,
-			'gender': this.gender,
-			'locale': this.locale,
-			'link': this.link,
-			'status': this.status,
-			'timezone': this.timezone
-		}
-	}
-
-	this.isAnon = function () {
-		if ( this.status === 'anon' ) {
-			return true;
-		}
-		return false;
-	};
-
-	this.isAdmin = function () {
-		if ( this.status === 'admin' ) {
-			return true;
-		}
-		return false;
-	};
-}
-
-$( mural.init );
+window.onload = () => mural.init();
