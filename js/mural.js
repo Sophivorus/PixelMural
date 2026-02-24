@@ -41,7 +41,7 @@ const mural = {
 		try {
 			const response = await fetch( 'https://api.pixelmural.org/Users' );
 			const data = await response.json();
-			console.log( data );
+			console.log( 'User', data );
 		} catch ( error ) {
 			// @todo
 		}
@@ -58,7 +58,8 @@ const mural = {
 	},
 
 	getCenterX() {
-		const centerX = parseInt( window.location.pathname.split( '/' ).slice( -3, -2 ), 10 );
+		const hash = window.location.hash.substring( 1 );
+		const centerX = parseInt( hash.split( ',' ).slice( -3, -2 ), 10 );
 		if ( !isNaN( centerX ) ) {
 			return centerX;
 		}
@@ -66,7 +67,8 @@ const mural = {
 	},
 
 	getCenterY() {
-		const centerY = parseInt( window.location.pathname.split( '/' ).slice( -2, -1 ), 10 );
+		const hash = window.location.hash.substring( 1 );
+		const centerY = parseInt( hash.split( ',' ).slice( -2, -1 ), 10 );
 		if ( !isNaN( centerY ) ) {
 			return centerY;
 		}
@@ -74,7 +76,8 @@ const mural = {
 	},
 
 	getPixelSize() {
-		const pixelSize = parseInt( window.location.pathname.split( '/' ).slice( -1 ), 10 );
+		const hash = window.location.hash.substring( 1 );
+		const pixelSize = parseInt( hash.split( ',' ).slice( -1 ), 10 );
 		if ( !isNaN( pixelSize ) ) {
 			return pixelSize;
 		}
@@ -123,12 +126,12 @@ const mural = {
 
 	setCenterX( value ) {
 		this.centerX = value;
-		this.updateURL();
+		this.updateHash();
 	},
 
 	setCenterY( value ) {
 		this.centerY = value;
-		this.updateURL();
+		this.updateHash();
 	},
 
 	setPixelSize( value ) {
@@ -141,7 +144,7 @@ const mural = {
 		}
 		this.xPixels = this.getXpixels();
 		this.yPixels = this.getYpixels();
-		this.updateURL();
+		this.updateHash();
 	},
 
 	// ACTIONS
@@ -247,9 +250,8 @@ const mural = {
 		}
 	},
 
-	updateURL() {
-		const BASE = document.querySelector( 'base' ).href;
-		history.replaceState( null, null, BASE + mural.centerX + '/' + mural.centerY + '/' + mural.pixelSize );
+	updateHash() {
+		window.location.hash = mural.centerX + ',' + mural.centerY + ',' + mural.pixelSize;
 	}
 };
 
@@ -418,4 +420,4 @@ const touch = {
 	}
 };
 
-window.onload = () => mural.init();
+document.addEventListener( 'DOMContentLoaded', () => mural.init() );
